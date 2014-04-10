@@ -9,6 +9,8 @@ $(document).ready(function() {
    //Drag and drop
    var dropZone = document.getElementById('dragdrop');
    dropZone.addEventListener('drop', handleFileSelect, false);
+   dropZone.addEventListener('dragover', handleDragOver, false);
+   dropZone.addEventListener('dragleave', handleDragLeave, false);
    //-------------
    $("#fileinput").change(calculate);
 });
@@ -21,14 +23,14 @@ function calculate(evt) {
 	var r = new FileReader();
 	r.onload = function(e) { 
 	  var contents = e.target.result;
-
+	  
 	  var tokens = lexer(contents);
 	  var pretty = tokensToString(tokens);
-
+	  
 	  out.className = 'unhidden';
 	  initialinput.innerHTML = contents;
 	  finaloutput.innerHTML = pretty;
-
+	  
 	  if (window.localStorage) {
 		localStorage.initialinput = contents;
 		localStorage.finaloutput = pretty;
@@ -54,14 +56,14 @@ function handleFileSelect(evt) {
 			var r = new FileReader();
 			r.onload = function(e) { 
 	  			var contents = e.target.result;
-
+	  
 	 	 		var tokens = lexer(contents);
 	  			var pretty = tokensToString(tokens);
-
+	  
 	  			out.className = 'unhidden';
 	  			initialinput.innerHTML = contents;
 	  			finaloutput.innerHTML = pretty;
-
+	  
 	  			if (window.localStorage) {
 					localStorage.initialinput = contents;
 					localStorage.finaloutput = pretty;
@@ -78,6 +80,19 @@ function handleFileSelect(evt) {
 	evt.target.style.background = "white";
     
 }
+
+function handleDragOver(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    evt.target.style.background = "#c9e8f3";
+}
+
+function handleDragLeave(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    evt.target.style.background = "white";
+}
+//-------
 
 function tokensToString(tokens) {
    var output_template = _.template(template_outList.innerHTML);
@@ -117,17 +132,17 @@ function lexer(input) {
 	}
 	else if (m = nameEqualValue.exec(input)) {
 	  input = input.substr(m.index+m[0].length);
-
+	  
 	  var m2;
 	  while(m2 = multiline.exec(m[2]))
 	  {
 	    var nextline_match = anycontent.exec(input);
 	    input = input.substr(nextline_match[0].length);
-
+		
 		m[2] = m2[1] + nextline_match[1];
 		m[0] = m[0] + nextline_match[1];
 	  }
-
+	  
 	  out.push({ type: 'nameEqualValue', match: m });
 	}
 	else if (m = any.exec(input)) {

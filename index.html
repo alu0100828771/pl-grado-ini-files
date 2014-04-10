@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14,16 +15,25 @@
      <script type="text/javascript" src="ini.js"></script>
   </head>
   <body>
-    <h1>INI files</h1>
-    <input type="file" id="fileinput" />
+	<!-- Plantilla para generar el contenido de la lista -->
+<script type="text/html" id="template_outList">
+<ol class="ol_output"> <% _.each(tokens, function(token, index){ %> <li class = "<%= token.type %>"> <span> <%= matches[index] %> </span></li> <% }); %> </ol>
+</script>
+
+    <!-- Contenido principal del documento -->
+    <table class="table_out">
+      <tr><td><h1>Ficheros INI</h1></td></tr>
+      <tr><td> <div class="input" id="dragdrop"><br>Arrastre el fichero aquí...</div></td></tr>
+      <tr><td><br><input type="file" id="fileinput" /></td></tr>
+    </table>
     <div id="out" class="hidden">
-    <table>
+    <table class="table_out">
       <tr><th>Original</th><th>Tokens</th></tr>
       <tr>
-        <td>
+        <td class="input_content">
           <pre class="input" id="initialinput"></pre>
         </td>
-        <td>
+        <td class="output_content">
           <pre class="output" id="finaloutput"></pre>
         </td>
       </tr>
